@@ -4,16 +4,16 @@ use crate::lib::GameState;
 use crate::lib::Piece;
 use crate::lib::PieceType;
 use std::collections::HashMap;
-use std::time::{Duration, Instant};
 use std::thread::sleep;
+use std::time::{Duration, Instant};
 
 impl Game {
     // The below code is for a terrible AI, uncommented because everything will change
     fn evaluate_board_state(&mut self) -> (i32, i32) {
         let mut white_value_sum = 0;
         let mut black_value_sum = 0;
-        for i in 0..8 { 
-            for j in 0..8 { 
+        for i in 0..8 {
+            for j in 0..8 {
                 if self.board[j as usize][i as usize] != None {
                     {
                         let currentcolor = self.board[j as usize][i as usize].unwrap().color;
@@ -35,7 +35,12 @@ impl Game {
     }
 
     // The below code is for a terrible AI, uncommented because everything will change
-    fn ai_get_sequential_move(&mut self, i: usize, all_possible_moves : &Vec<Vec<i8>>, very_useful_map : &HashMap<Vec<i8>, Vec<i8>>) -> (String, String, Vec<i8>, Vec<i8>) {
+    fn ai_get_sequential_move(
+        &mut self,
+        i: usize,
+        all_possible_moves: &Vec<Vec<i8>>,
+        very_useful_map: &HashMap<Vec<i8>, Vec<i8>>,
+    ) -> (String, String, Vec<i8>, Vec<i8>) {
         let owncolor = self.color;
         //let (all_possible_moves, very_useful_map) = self.get_all_possible_moves(&owncolor);
         //println!("{:?}", owncolor);
@@ -65,9 +70,9 @@ impl Game {
             randommove.to_vec(),
             randommoveto.to_vec(),
         );
-    } 
+    }
 
-       // The below code is for a terrible AI, uncommented because everything will change
+    // The below code is for a terrible AI, uncommented because everything will change
 
     /*fn get_data_of_opposite_color(&mut self) -> i32 {
         let mut owncolor = self.color;
@@ -96,14 +101,14 @@ impl Game {
             //self.print();
             // Evals best move
             let (white_value_sum, black_value_sum) = Game::evaluate_board_state(self);
-            // It's the opposite's color evaluation which is relevant, and you want to choose the least value 
+            // It's the opposite's color evaluation which is relevant, and you want to choose the least value
             if owncolor == Color::White && best_evaluation > white_value_sum {
                 best_evaluation = white_value_sum;
                 best_move = randommovestring;
                 best_move_to = randommovetostring;
                     //self.print();
                 //println!("Best (black) move: {:?} {:?}", best_move, best_move_to)
-        
+
             } else if owncolor == Color::Black && best_evaluation > black_value_sum {
                 best_evaluation = black_value_sum;
                 best_move = randommovestring;
@@ -148,8 +153,8 @@ impl Game {
             println!("best outcome for opposite final: {:?}", best_outcome_for_opposite);
 
             self.color = owncolor;
-            // Best outcome for opposite is black's worst score (after white's best move), you want to make it as 
-            // high (bad for white) as possible, which is why the if statemnet above chooses the highest 
+            // Best outcome for opposite is black's worst score (after white's best move), you want to make it as
+            // high (bad for white) as possible, which is why the if statemnet above chooses the highest
             if best_evaluation < best_outcome_for_opposite {
                 best_evaluation = best_outcome_for_opposite;
                 best_move = randommovestring;
@@ -181,8 +186,8 @@ impl Game {
     fn better_evaluate(&mut self) -> i32 {
         let mut white_value_sum = 0;
         let mut black_value_sum = 0;
-        for i in 0..8 { 
-            for j in 0..8 { 
+        for i in 0..8 {
+            for j in 0..8 {
                 if self.board[j as usize][i as usize] != None {
                     {
                         let currentcolor = self.board[j as usize][i as usize].unwrap().color;
@@ -202,38 +207,39 @@ impl Game {
         ////println!("Black: {:?}", black_value_sum);
         if self.color == Color::White {
             //println!("{:?}", self.color);
-            return white_value_sum - black_value_sum // The bot wants this to be as low as possible (negative)
+            return white_value_sum - black_value_sum; // The bot wants this to be as low as possible (negative)
         } else {
-            return -(white_value_sum - black_value_sum) // The bot wants this to be as high as possible (positive)
+            return -(white_value_sum - black_value_sum); // The bot wants this to be as high as possible (positive)
         }
-        // Depth search 2 would be color white 
+        // Depth search 2 would be color white
     }
 
-    fn recursive_search(&mut self, depth : i32) -> (i32, String, String) {
+    fn recursive_search(&mut self, depth: i32) -> (i32, String, String) {
         if depth == 0 {
             //println!("Return!");
             self.positions_evaluated += 1;
-            return (Game::better_evaluate(self), "".to_string(),"".to_string());
+            return (Game::better_evaluate(self), "".to_string(), "".to_string());
             //println!("Return nhnmmm!");
         }
+        let mut all_equal_moves: HashMap<String, String> = HashMap::new();
         //let currentboardeval = Game::better_evaluate(self), "".to_string(),"".to_string())
         //println!("{:?}", currentboardeval);
-        let mut owncolor = self.color;
+        let owncolor = self.color;
         let mut best_evaluation = -1000;
-        let mut best_move: String = "".to_string();
-        let mut best_move_to: String = "".to_string();
-        let opposite_color = Game::opposite_color_func(owncolor);
+        //let mut best_move: String = "".to_string();
+        //let mut best_move_to: String = "".to_string();
+        //let opposite_color = Game::opposite_color_func(owncolor);
         //self.color = opposite_color;
         let saved_boardstate = self.board;
         //println!("Owncolor: {:?} , Self.color: {:?}, Opposite_color: {:?}", owncolor,  self.color, opposite_color);
         let (all_possible_moves, very_useful_map) = self.get_all_possible_moves(&owncolor);
         let count = all_possible_moves.iter().count();
-        for mut j in 0..count {
+        for j in 0..count {
             //let (randommovestring, randommovetostring, randommove, randommoveto) = Game::ai_get_random_move(self);
-            
+
             let (randommovestring, randommovetostring, randommove, randommoveto) =
                 Game::ai_get_sequential_move(self, j, &all_possible_moves, &very_useful_map);
-                //println!("Middle color: {:?}", self.color);
+            //println!("Middle color: {:?}", self.color);
             Game::simplified_make_move(
                 self,
                 &randommovestring,
@@ -241,29 +247,38 @@ impl Game {
                 true,
             );
             //self.print();
-            let (evaluation, irrelevant, irrelevant2)= Game::recursive_search(self, depth - 1);
+            let (evaluation, irrelevant, irrelevant2) = Game::recursive_search(self, depth - 1);
             let evaluation = -evaluation;
-            if evaluation >= best_evaluation {
+            if evaluation > best_evaluation {
                 //println!("I picked eval : {:?}", evaluation);
                 best_evaluation = evaluation;
-                best_move = randommovestring;
-                best_move_to = randommovetostring;
+                //best_move = randommovestring;
+                //best_move_to = randommovetostring;
+                all_equal_moves = HashMap::new();
+                all_equal_moves.insert(randommovestring.clone(), randommovetostring.clone());
                 //all_equal_moves = HashMap::new();
                 //all_equal_moves.insert(best_move.clone(), best_move_to.clone());
-            } /*else if best_evaluation == best_outcome_for_opposite {
+            } else if evaluation == best_evaluation {
+                all_equal_moves.insert(randommovestring.clone(), randommovetostring);
+            }
+
+            /*else if best_evaluation == best_outcome_for_opposite {
                 all_equal_moves.insert(randommovestring.clone(), randommovetostring);
             }*/
-            // It's the opposite's color evaluation which is relevant, and you want to choose the least value 
-            self.color = owncolor; 
+            // It's the opposite's color evaluation which is relevant, and you want to choose the least value
+            self.color = owncolor;
             self.board = saved_boardstate;
         }
+        let someequalmove = all_equal_moves.iter().nth(0).unwrap();
+        let best_move = someequalmove.0.to_string();
+        let best_move_to = someequalmove.1.to_string();
 
         //self.color = opposite_color;
         //self.print();
         //println!("Best evaluation: {:?}", best_evaluation);
         //println!("Best move: {:?} {:?}", best_move, best_move_to);
         return (best_evaluation, best_move, best_move_to);
-    } 
+    }
 
     pub fn better_chess_ai(&mut self) -> bool {
         /*for mut i in 0..1 {
@@ -272,17 +287,21 @@ impl Game {
             let (white_value_sum, black_value_sum) = Game::evaluate_board_state(self);
             if white_value_sum < 100 || black_value_sum < 100 {
                 //println!("{:?} lost on Turn {:?}", self.color, i);
-                return true 
+                return true
             }
             ////println!("Chess AI took: {:?}", now.elapsed());
         }*/
-        self.positions_evaluated = 0; 
+        self.positions_evaluated = 0;
         let (irrelevant, best_move, best_move_to) = Game::recursive_search(self, 3);
-         println!("best  AI : {:?} {:?}", best_move,best_move_to );
-                        Game::simplified_make_move(self, &best_move, best_move_to.to_string(), true);
+        println!("best  AI : {:?} {:?}", best_move, best_move_to);
+        Game::simplified_make_move(self, &best_move, best_move_to.to_string(), true);
         Game::print(self);
-        println!("positions evaluated : {:?}", self.positions_evaluated );
-        false 
+        println!("positions evaluated : {:?}", self.positions_evaluated);
+        if Game::better_evaluate(self).abs() > 100 {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /*pub fn chess_ai(&mut self) {
@@ -296,7 +315,7 @@ impl Game {
             let saved_boardstate = self.board;
             let (all_possible_moves, very_useful_map) = self.get_all_possible_moves(&owncolor);
 
-            // You've changed this !!! 
+            // You've changed this !!!
             for j in 0..all_possible_moves.iter().count() {
                 let saved_boardstate = self.board;
                 //let (randommovestring, randommovetostring, randommove, randommoveto) = Game::ai_get_random_move(self);

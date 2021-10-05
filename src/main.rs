@@ -7,21 +7,21 @@ use crate::lib::Piece;
 use crate::lib::PieceType;
 use glam::*;
 //use crate::lib::Color;
-use eliasfl_chess::*;
+//use eliasfl_chess::*;
 use ggez::event;
 use ggez::event::MouseButton;
 use ggez::graphics::{self, Color, DrawMode, DrawParam};
 use ggez::input::keyboard::KeyCode;
 use ggez::input::keyboard::KeyMods;
-use ggez::timer;
+//use ggez::timer;
 use ggez::{Context, GameResult};
 use std::collections::HashMap;
 use std::env;
 use std::path;
 mod ai;
 mod lib;
-use std::time::{Duration, Instant};
 use std::thread::sleep;
+use std::time::{Duration, Instant};
 
 struct MainState {
     image1: graphics::Image,
@@ -46,6 +46,7 @@ struct MainState {
     possiblemoves: Vec<Vec<i8>>,
     gameover: bool,
     updatecallai: bool,
+    time: Instant,
 }
 
 /// A chess board is 8x8 tiles.
@@ -136,8 +137,9 @@ impl MainState {
         let selectedvector = vec![0, 1];
         let string_from = "".to_string();
         let possiblemoves = vec![vec![]];
-        let gameover = false; 
-        let updatecallai = false; 
+        let gameover = false;
+        let updatecallai = false;
+        let time = Instant::now();
 
         println!("{:?}", board);
 
@@ -162,8 +164,9 @@ impl MainState {
             selectedvector,
             string_from,
             possiblemoves,
-            gameover, 
+            gameover,
             updatecallai,
+            time,
         };
 
         Ok(s)
@@ -172,7 +175,7 @@ impl MainState {
 
 impl event::EventHandler<ggez::GameError> for MainState {
     fn update(&mut self, ctx: &mut Context) -> GameResult {
-        const DESIRED_FPS: u32 = 60;
+        //const DESIRED_FPS: u32 = 60;
 
         Ok(())
     }
@@ -180,10 +183,33 @@ impl event::EventHandler<ggez::GameError> for MainState {
     fn draw(&mut self, ctx: &mut Context) -> GameResult {
         graphics::clear(ctx, [0.1, 0.2, 0.3, 1.0].into());
 
+                        // create text representation
+                        let state_text = graphics::Text::new(
+                            graphics::TextFragment::from(format!("Game is {:?}.", self.game.get_game_state()))
+                                .scale(graphics::PxScale { x: 30.0, y: 30.0 }),
+                        );
+                
+                        // get size of text
+                        let text_dimensions = state_text.dimensions(ctx);
+                
+
         let background_box = graphics::Mesh::new_rectangle(
             ctx,
             DrawMode::fill(),
             graphics::Rect::new(5 as f32, 5 as f32, 5 as f32, 5 as f32),
+            [1.0, 1.0, 1.0, 1.0].into(),
+        )?;
+
+        // create background rectangle with white coulouring
+        let background_box = graphics::Mesh::new_rectangle(
+            ctx,
+            graphics::DrawMode::fill(),
+            graphics::Rect::new(
+                (SCREEN_SIZE.0 - text_dimensions.w as f32) / 2f32 as f32 - 8.0,
+                (SCREEN_SIZE.0 - text_dimensions.h as f32) / 2f32 as f32,
+                text_dimensions.w as f32 + 16.0,
+                text_dimensions.h as f32,
+            ),
             [1.0, 1.0, 1.0, 1.0].into(),
         )?;
 
@@ -225,31 +251,27 @@ impl event::EventHandler<ggez::GameError> for MainState {
                     should_i = true;
                 }
             }*/
-            let mut should_i = true;
-
-            if should_i {
-                //graphics::draw(ctx, &self.image5, (glam::Vec2::new(45.0*self.selectedvector[0] as f32, 44.8*self.selectedvector[1] as f32),));
-                let rectangle = graphics::Mesh::new_rectangle(
-                    ctx,
-                    graphics::DrawMode::fill(),
-                    graphics::Rect::new_i32(
-                        self.xpos as i32 * GRID_CELL_SIZE.0 as i32,
-                        self.ypos as i32 * GRID_CELL_SIZE.1 as i32,
-                        GRID_CELL_SIZE.0 as i32,
-                        GRID_CELL_SIZE.1 as i32,
-                    ),
-                    BROWN,
-                )?;
-                graphics::draw(ctx, &rectangle, (ggez::mint::Point2 { x: 0.0, y: 0.0 },));
-            }
+            //graphics::draw(ctx, &self.image5, (glam::Vec2::new(45.0*self.selectedvector[0] as f32, 44.8*self.selectedvector[1] as f32),));
+            let rectangle = graphics::Mesh::new_rectangle(
+                ctx,
+                graphics::DrawMode::fill(),
+                graphics::Rect::new_i32(
+                    self.xpos as i32 * GRID_CELL_SIZE.0 as i32,
+                    self.ypos as i32 * GRID_CELL_SIZE.1 as i32,
+                    GRID_CELL_SIZE.0 as i32,
+                    GRID_CELL_SIZE.1 as i32,
+                ),
+                BROWN,
+            )?;
+            graphics::draw(ctx, &rectangle, (ggez::mint::Point2 { x: 0.0, y: 0.0 },));
         }
 
         if self.selected {
             for i in 0..self.possiblemoves.iter().count() {
                 if self.possiblemoves[0] != vec![] {
-                let currentxpos = self.possiblemoves[i][0];
-                let currentypos = self.possiblemoves[i][1];
-                //if !(self.possiblemoves[i][1] == 6 as i8 && self.possiblemoves[i][0] == 4 as i8) {
+                    let currentxpos = self.possiblemoves[i][0];
+                    let currentypos = self.possiblemoves[i][1];
+                    //if !(self.possiblemoves[i][1] == 6 as i8 && self.possiblemoves[i][0] == 4 as i8) {
                     let rectangle = graphics::Mesh::new_rectangle(
                         ctx,
                         graphics::DrawMode::fill(),
@@ -262,10 +284,13 @@ impl event::EventHandler<ggez::GameError> for MainState {
                         RED,
                     )?;
                     graphics::draw(ctx, &rectangle, (ggez::mint::Point2 { x: 0.0, y: 0.0 },));
-                //}
+                    //}
+                }
             }
         }
-        }
+
+        // render updated graphics
+        //graphics::present(ctx).expect("Failed to update graphics.");
 
         // Draw an image.
         /*for i in 0..8 {
@@ -349,12 +374,12 @@ impl event::EventHandler<ggez::GameError> for MainState {
 
         for currentypos in 0..8 {
             for currentxpos in 0..8 {
-                if self.game.board[7-currentypos][currentxpos] != None {
+                if self.game.board[7 - currentypos][currentxpos] != None {
                     //println!("{:?}", value);
                     //let kind_of_image = self.image12.clone();
                     let kind_of_image = what_image(self.game.board[7 - currentypos][currentxpos]);
-                   // println!("{:?} {:?} {:?}", currentxpos, currentypos, value);
-                   //println!("{:?}", kind_of_image);
+                    // println!("{:?} {:?} {:?}", currentxpos, currentypos, value);
+                    //println!("{:?}", kind_of_image);
 
                     graphics::draw(
                         ctx,
@@ -363,7 +388,7 @@ impl event::EventHandler<ggez::GameError> for MainState {
                             45.0 * currentxpos as f32,
                             44.8 * (7 as f32 - currentypos as f32),
                         ),),
-                    ); 
+                    );
 
                     //println!("{:?} / {:?} / {:?}", key.file, key.rank, value);
                     //println!("{:?} / {:?} / {:?}", currentxpos, currentypos, value);
@@ -376,17 +401,39 @@ impl event::EventHandler<ggez::GameError> for MainState {
         //let dst1 = glam::Vec2::new(45.5*i, 43.5);
         //graphics::draw(ctx, &self.image1, (dst2,))?;
         if !self.gameover {
-        //self.gameover = lib::Game::better_chess_ai(&mut self.game);
-    }
-
+            //self.gameover = lib::Game::better_chess_ai(&mut self.game);
+        }
 
         graphics::present(ctx)?;
         if !self.gameover && self.updatecallai {
             let now = Instant::now();
             self.gameover = lib::Game::better_chess_ai(&mut self.game);
-            self.updatecallai = false; 
+            self.updatecallai = false;
             println!("Chess AI took: {:?}", now.elapsed());
         }
+        let realcountdown = 5.0 * 1.0 - self.time.elapsed().as_secs() as f32;
+        let currentminutes = ((4.0 * 60.0 - self.time.elapsed().as_secs() as f32) / 60.0).ceil();
+        println!(
+            "Current time: {:.0?}:{:.0?}",
+            currentminutes,
+            (59.0 - self.time.elapsed().as_secs() as f32)%60.0
+        );
+        if realcountdown == 0.0 {
+            println!("Time out!");
+        }
+
+        // draw text with dark gray colouring and center position
+        graphics::draw(
+            ctx,
+            &state_text,
+            graphics::DrawParam::default()
+                .dest(ggez::mint::Point2 {
+                    x: (SCREEN_SIZE.0 - text_dimensions.w as f32) / 2f32 as f32,
+                    y: (SCREEN_SIZE.0 - text_dimensions.h as f32) / 2f32 as f32,
+                }),
+        )
+        .expect("Failed to draw text.");
+
         Ok(())
     }
 
@@ -397,7 +444,11 @@ impl event::EventHandler<ggez::GameError> for MainState {
             self.xpos = ((x as i32 / 45) as f64).floor();
             self.ypos = ((y as i32 / 45) as f64).floor();
             println!("{} {}", self.xpos, self.ypos);
-            if self.possiblemoves.contains(&vec![self.xpos as i8, self.ypos as i8]) && self.selected {
+            if self
+                .possiblemoves
+                .contains(&vec![self.xpos as i8, self.ypos as i8])
+                && self.selected
+            {
                 //if {
                 self.selected = false;
                 let string_to =
@@ -413,41 +464,46 @@ impl event::EventHandler<ggez::GameError> for MainState {
                     true,
                 );
                 /*if gamestate == GameState::GameOver {
-                    self.gameover = true; 
-                }*/ 
+                    self.gameover = true;
+                }*/
                 //if self.game.GameState = Checkmate
-                self.updatecallai = true; 
+                self.updatecallai = true;
                 //eliasfl_chess::Game::make_move(&mut self.game, temporary_string_from.to_string(), string_to.to_string());
                 //let ischeckmate = eliasfl_chess::Game::_is_checkmate(&mut self.game, self.game.active_color);
                 //println!("{:?}", ischeckmate);
             } else if self.game.board[self.ypos as usize][self.xpos as usize] != None {
-                if self.game.board[self.ypos as usize][self.xpos as usize].unwrap().color == self.game.color {
-                self.string_from =
-                    convert_vec_to_string(&vec![vec![self.xpos as i8, self.ypos as i8]]).clone()[0]
-                        .to_string();
-                self.selected = true;
-                //let  possiblemoves = eliasfl_chess::Game::get_possible_moves(&mut self.game, self.string_from.clone());
-                let (irrelevant, possiblemoves) = lib::Game::get_possible_moves(
-                    &mut self.game,
-                    &vec![self.xpos as i8, self.ypos as i8],
-                    false,
-                );
-                println!("{:?}", possiblemoves);
+                if self.game.board[self.ypos as usize][self.xpos as usize]
+                    .unwrap()
+                    .color
+                    == self.game.color
+                {
+                    self.string_from =
+                        convert_vec_to_string(&vec![vec![self.xpos as i8, self.ypos as i8]])
+                            .clone()[0]
+                            .to_string();
+                    self.selected = true;
+                    //let  possiblemoves = eliasfl_chess::Game::get_possible_moves(&mut self.game, self.string_from.clone());
+                    let (irrelevant, possiblemoves) = lib::Game::get_possible_moves(
+                        &mut self.game,
+                        &vec![self.xpos as i8, self.ypos as i8],
+                        false,
+                    );
+                    println!("{:?}", possiblemoves);
 
-                /*let mut unwrappedpossible =  vec!["e2".to_string()];
-                if possiblemoves != None {
-                    unwrappedpossible = possiblemoves.unwrap()
-                }*/
-                /*let mut realpossiblemoves = vec![];
-                //possiblemoves = possiblemoves.unwrap();
-                for i in 0..possiblemoves.len() {
-                    realpossiblemoves.push(convert_string_to_vec(possiblemoves[i].to_string()));
-                }*/
-                //println!("{:?}", possiblemoves.unwrap()[0]);
-                self.possiblemoves = possiblemoves;
-                println!("{:?}", self.possiblemoves);
-                self.selectedvector = vec![self.xpos as i32 , self.ypos as i32];
-            }
+                    /*let mut unwrappedpossible =  vec!["e2".to_string()];
+                    if possiblemoves != None {
+                        unwrappedpossible = possiblemoves.unwrap()
+                    }*/
+                    /*let mut realpossiblemoves = vec![];
+                    //possiblemoves = possiblemoves.unwrap();
+                    for i in 0..possiblemoves.len() {
+                        realpossiblemoves.push(convert_string_to_vec(possiblemoves[i].to_string()));
+                    }*/
+                    //println!("{:?}", possiblemoves.unwrap()[0]);
+                    self.possiblemoves = possiblemoves;
+                    println!("{:?}", self.possiblemoves);
+                    self.selectedvector = vec![self.xpos as i32, self.ypos as i32];
+                }
             }
             println!("{:?}", self.selected);
             //let board = game.board;

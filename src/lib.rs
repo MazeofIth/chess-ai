@@ -5,9 +5,9 @@ use std::fmt;
 use std::io;
 use std::io::prelude::*;
 extern crate stopwatch;
-use stopwatch::{Stopwatch};
-use std::time::{Duration, Instant};
 use std::thread::sleep;
+use std::time::{Duration, Instant};
+use stopwatch::Stopwatch;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum GameState {
@@ -19,7 +19,7 @@ pub enum GameState {
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Color {
     White,
-    Black, 
+    Black,
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -230,7 +230,12 @@ impl Game {
         Game::get_game_state(&self)
     }
 
-    pub fn simplified_make_move(&mut self, _from: &String, _to: String, changecolor: bool) -> GameState {
+    pub fn simplified_make_move(
+        &mut self,
+        _from: &String,
+        _to: String,
+        changecolor: bool,
+    ) -> GameState {
         //let now = Instant::now();
 
         if Game::get_game_state(self) == GameState::InProgress {
@@ -239,34 +244,32 @@ impl Game {
             let piece_to_move = Game::convert_string_to_vec(_from.to_string());
             //println!("{:?}", piece_to_move);
             //println!("{:?}", self.color);
-                let square_to_move_to = Game::convert_string_to_vec(_to);
+            let square_to_move_to = Game::convert_string_to_vec(_to);
 
-                        let ownpiecetype = self.board[piece_to_move[1] as usize]
-                            [piece_to_move[0] as usize]
-                            .unwrap()
-                            .piecetype;
-                        self.board[piece_to_move[1] as usize][piece_to_move[0] as usize] = None;
-                        self.board[square_to_move_to[1] as usize][square_to_move_to[0] as usize] =
-                            Some(Piece {
-                                piecetype: ownpiecetype,
-                                color: self.color,
-                            });
+            let ownpiecetype = self.board[piece_to_move[1] as usize][piece_to_move[0] as usize]
+                .unwrap()
+                .piecetype;
+            self.board[piece_to_move[1] as usize][piece_to_move[0] as usize] = None;
+            self.board[square_to_move_to[1] as usize][square_to_move_to[0] as usize] =
+                Some(Piece {
+                    piecetype: ownpiecetype,
+                    color: self.color,
+                });
 
-        //self.print();
-        Game::set_promotion(self, PieceType::Queen);
-        if changecolor {
-            //println!("Changing color");
-            if self.color == Color::White {
-                self.color = Color::Black;
-            } else {
-                self.color = Color::White;
+            //self.print();
+            Game::set_promotion(self, PieceType::Queen);
+            if changecolor {
+                //println!("Changing color");
+                if self.color == Color::White {
+                    self.color = Color::Black;
+                } else {
+                    self.color = Color::White;
+                }
             }
         }
+        ////println!("Simplified make_move took: {:?}", now.elapsed());
+        Game::get_game_state(&self)
     }
-    ////println!("Simplified make_move took: {:?}", now.elapsed());
-    Game::get_game_state(&self)
-
-}
 
     /// Set the piece type that a peasant becames following a promotion.
     pub fn set_promotion(&mut self, _piece: PieceType) -> () {
@@ -339,10 +342,10 @@ impl Game {
 
     // Prints the board in unicode
     pub fn print(&self) {
-        let now = Instant::now();
+        //let now = Instant::now();
 
         // it prints '2'
-     
+
         let sw = Stopwatch::start_new();
         println!("#-A--B--C--D--E--F--G--H-#");
         let mut lineiter = 9;
@@ -712,7 +715,7 @@ impl Game {
                 let to_add_one = if own_color == Color::Black { 1 } else { -1 };
                 let to_add_two = if own_color == Color::Black { 2 } else { -2 };
                 let start_position = if own_color == Color::Black { 1 } else { 6 };
-                let promotion_position = if own_color == Color::Black { 7 } else { 0 };
+                //let promotion_position = if own_color == Color::Black { 7 } else { 0 };
                 let mut possible_moves = vec![];
 
                 // Adds one step forward to possible_moves if the square is empty
@@ -828,7 +831,10 @@ impl Game {
 
             // Removes moves which contain a piece of the same color (only necessary for knight, king and pawn)
             let mut new_new_position: Vec<Vec<i8>> = vec![];
-            if current_piecetype == PieceType::Pawn || current_piecetype == PieceType::Knight || current_piecetype == PieceType::King {
+            if current_piecetype == PieceType::Pawn
+                || current_piecetype == PieceType::Knight
+                || current_piecetype == PieceType::King
+            {
                 for i in 0..8 {
                     for j in 0..8 {
                         if new_position.contains(&vec![i, j]) {
@@ -872,7 +878,7 @@ impl Game {
             let mut even_newer_converted_new_vector: Vec<String> = vec![];
 
             if should_check {
-                for mut i in 0..converted_new_vector.iter().count() {
+                for i in 0..converted_new_vector.iter().count() {
                     let saved_boardstate = self.board;
                     let stringposition = &Game::convert_vec_to_string(&vec![_position.to_vec()])[0];
 
