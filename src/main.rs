@@ -45,6 +45,7 @@ struct MainState {
     string_from: String,
     possiblemoves: Vec<Vec<i8>>,
     gameover: bool,
+    updatecallai: bool,
 }
 
 /// A chess board is 8x8 tiles.
@@ -136,6 +137,7 @@ impl MainState {
         let string_from = "".to_string();
         let possiblemoves = vec![vec![]];
         let gameover = false; 
+        let updatecallai = false; 
 
         println!("{:?}", board);
 
@@ -161,6 +163,7 @@ impl MainState {
             string_from,
             possiblemoves,
             gameover, 
+            updatecallai,
         };
 
         Ok(s)
@@ -376,7 +379,14 @@ impl event::EventHandler<ggez::GameError> for MainState {
         //self.gameover = lib::Game::better_chess_ai(&mut self.game);
     }
 
+
         graphics::present(ctx)?;
+        if !self.gameover && self.updatecallai {
+            let now = Instant::now();
+            self.gameover = lib::Game::better_chess_ai(&mut self.game);
+            self.updatecallai = false; 
+            println!("Chess AI took: {:?}", now.elapsed());
+        }
         Ok(())
     }
 
@@ -406,11 +416,7 @@ impl event::EventHandler<ggez::GameError> for MainState {
                     self.gameover = true; 
                 }*/ 
                 //if self.game.GameState = Checkmate
-                let now = Instant::now();
-                if !self.gameover {
-                self.gameover = lib::Game::better_chess_ai(&mut self.game);
-            }
-                println!("Chess AI took: {:?}", now.elapsed());
+                self.updatecallai = true; 
                 //eliasfl_chess::Game::make_move(&mut self.game, temporary_string_from.to_string(), string_to.to_string());
                 //let ischeckmate = eliasfl_chess::Game::_is_checkmate(&mut self.game, self.game.active_color);
                 //println!("{:?}", ischeckmate);

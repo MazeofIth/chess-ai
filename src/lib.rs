@@ -59,6 +59,7 @@ pub struct Game {
     pub state: GameState,
     pub board: [[Option<Piece>; 8]; 8],
     pub color: Color,
+    pub positions_evaluated: i32,
 }
 
 impl Game {
@@ -68,6 +69,7 @@ impl Game {
             state: GameState::InProgress,
             color: Color::White,
             board: Game::generate_board(),
+            positions_evaluated: 0,
         }
     }
 
