@@ -1,0 +1,12 @@
+C:\Users\elias\rust\owngui\target\debug\deps\num_bigint-ecc3cf31e5e5d358.rmeta: C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\lib.rs C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\macros.rs C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\biguint.rs C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\algorithms.rs C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\monty.rs C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\bigint.rs
+
+C:\Users\elias\rust\owngui\target\debug\deps\libnum_bigint-ecc3cf31e5e5d358.rlib: C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\lib.rs C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\macros.rs C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\biguint.rs C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\algorithms.rs C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\monty.rs C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\bigint.rs
+
+C:\Users\elias\rust\owngui\target\debug\deps\num_bigint-ecc3cf31e5e5d358.d: C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\lib.rs C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\macros.rs C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\biguint.rs C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\algorithms.rs C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\monty.rs C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\bigint.rs
+
+C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\lib.rs:
+C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\macros.rs:
+C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\biguint.rs:
+C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\algorithms.rs:
+C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\monty.rs:
+C:\Users\elias\.cargo\registry\src\github.com-1ecc6299db9ec823\num-bigint-0.1.44\src\bigint.rs:

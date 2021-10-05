@@ -1,0 +1,13 @@
+[package]
+name = "hello_ggez"
+version = "0.1.0"
+# Replace with your name and email
+authors = ["Awesome Person awesome@person.com"]
+edition = "2018"
+
+[dependencies]
+ggez = "0.6"
+glam = { version = "0.17.0", default-features = false, features = ["libm"] }
+eliasfl-chess = { git = "https://github.com/INDAPlus21/eliasfl-chess" }
+rand = "0.8.4"
+stopwatch = "0.0.7"

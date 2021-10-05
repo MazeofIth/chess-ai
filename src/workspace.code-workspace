@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "..\\..\\..\\openai"
+		},
+		{
+			"path": "..\\..\\..\\chess"
+		},
+		{
+			"path": "..\\..\\..\\eliased-chess"
+		},
+		{
+			"path": "..\\..\\..\\eliased-chess-gui"
+		},
+		{
+			"path": "..\\.."
+		}
+	],
+	"settings": {}
+}
