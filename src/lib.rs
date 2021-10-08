@@ -44,12 +44,12 @@ pub enum PieceType {
 impl PieceType {
     pub fn value(&self) -> i32 {
         match *self {
-            PieceType::Pawn => 1,
-            PieceType::Knight => 3,
-            PieceType::Bishop => 3,
-            PieceType::Rook => 5,
-            PieceType::Queen => 9,
-            PieceType::King => 100,
+            PieceType::Pawn => 100,
+            PieceType::Knight => 300,
+            PieceType::Bishop => 300,
+            PieceType::Rook => 500,
+            PieceType::Queen => 900,
+            PieceType::King => 10000,
             _ => 0,
         }
     }
@@ -230,7 +230,7 @@ impl Game {
         Game::get_game_state(&self)
     }
 
-    pub fn simplified_make_move(
+    /*pub fn simplified_make_move(
         &mut self,
         _from: &String,
         _to: String,
@@ -245,6 +245,47 @@ impl Game {
             //println!("{:?}", piece_to_move);
             //println!("{:?}", self.color);
             let square_to_move_to = Game::convert_string_to_vec(_to);
+
+            let ownpiecetype = self.board[piece_to_move[1] as usize][piece_to_move[0] as usize]
+                .unwrap()
+                .piecetype;
+            self.board[piece_to_move[1] as usize][piece_to_move[0] as usize] = None;
+            self.board[square_to_move_to[1] as usize][square_to_move_to[0] as usize] =
+                Some(Piece {
+                    piecetype: ownpiecetype,
+                    color: self.color,
+                });
+
+            //self.print();
+            Game::set_promotion(self, PieceType::Queen);
+            if changecolor {
+                //println!("Changing color");
+                if self.color == Color::White {
+                    self.color = Color::Black;
+                } else {
+                    self.color = Color::White;
+                }
+            }
+        }
+        ////println!("Simplified make_move took: {:?}", now.elapsed());
+        Game::get_game_state(&self)
+    }*/
+
+    pub fn simplified_make_move(
+        &mut self,
+        _from: Vec<i8>,
+        _to: Vec<i8>,
+        changecolor: bool,
+    ) -> GameState {
+        //let now = Instant::now();
+
+        if Game::get_game_state(self) == GameState::InProgress {
+            //println!("{:?}", _from);
+            //self.print();
+            let piece_to_move = _from;
+            //println!("{:?}", piece_to_move);
+            //println!("{:?}", self.color);
+            let square_to_move_to = _to;
 
             let ownpiecetype = self.board[piece_to_move[1] as usize][piece_to_move[0] as usize]
                 .unwrap()
@@ -870,8 +911,8 @@ impl Game {
                 Game::print(&self)
             }*/
 
-            let converted_new_vector = Game::convert_vec_to_string(&new_new_position);
-            ////println!("{:?}", converted_new_vector);
+            let converted_new_vector = vec!["nothing to see here".to_string()]; // Game::convert_vec_to_string(&new_new_position);
+                                                                                ////println!("{:?}", converted_new_vector);
 
             // Check for check
             let mut even_newer_vector: Vec<Vec<i8>> = vec![];

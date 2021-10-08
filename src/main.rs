@@ -183,15 +183,14 @@ impl event::EventHandler<ggez::GameError> for MainState {
     fn draw(&mut self, ctx: &mut Context) -> GameResult {
         graphics::clear(ctx, [0.1, 0.2, 0.3, 1.0].into());
 
-                        // create text representation
-                        let state_text = graphics::Text::new(
-                            graphics::TextFragment::from(format!("Game is {:?}.", self.game.get_game_state()))
-                                .scale(graphics::PxScale { x: 30.0, y: 30.0 }),
-                        );
-                
-                        // get size of text
-                        let text_dimensions = state_text.dimensions(ctx);
-                
+        // create text representation
+        let state_text = graphics::Text::new(
+            graphics::TextFragment::from(format!("Game is {:?}.", self.game.get_game_state()))
+                .scale(graphics::PxScale { x: 30.0, y: 30.0 }),
+        );
+
+        // get size of text
+        let text_dimensions = state_text.dimensions(ctx);
 
         let background_box = graphics::Mesh::new_rectangle(
             ctx,
@@ -413,24 +412,23 @@ impl event::EventHandler<ggez::GameError> for MainState {
         }
         let realcountdown = 5.0 * 1.0 - self.time.elapsed().as_secs() as f32;
         let currentminutes = ((4.0 * 60.0 - self.time.elapsed().as_secs() as f32) / 60.0).ceil();
-        println!(
+        /*println!(
             "Current time: {:.0?}:{:.0?}",
             currentminutes,
             (59.0 - self.time.elapsed().as_secs() as f32)%60.0
-        );
+        );*/
         if realcountdown == 0.0 {
-            println!("Time out!");
+            //println!("Time out!");
         }
 
         // draw text with dark gray colouring and center position
         graphics::draw(
             ctx,
             &state_text,
-            graphics::DrawParam::default()
-                .dest(ggez::mint::Point2 {
-                    x: (SCREEN_SIZE.0 - text_dimensions.w as f32) / 2f32 as f32,
-                    y: (SCREEN_SIZE.0 - text_dimensions.h as f32) / 2f32 as f32,
-                }),
+            graphics::DrawParam::default().dest(ggez::mint::Point2 {
+                x: (SCREEN_SIZE.0 - text_dimensions.w as f32) / 2f32 as f32,
+                y: (SCREEN_SIZE.0 - text_dimensions.h as f32) / 2f32 as f32,
+            }),
         )
         .expect("Failed to draw text.");
 
@@ -519,6 +517,17 @@ impl event::EventHandler<ggez::GameError> for MainState {
             KeyCode::R => {
                 self.game = lib::Game::new();
                 self.gameover = false;
+                /*let pawntable = vec![
+                    -30, -40, -40, -50, -50, -40, -40, -30, -30, -40, -40, -50, -50, -40, -40, -30,
+                    -30, -40, -40, -50, -50, -40, -40, -30, -30, -40, -40, -50, -50, -40, -40, -30,
+                    -20, -30, -30, -40, -40, -30, -30, -20, -10, -20, -20, -20, -20, -20, -20, -10,
+                    20, 20, 0, 0, 0, 0, 20, 20, 20, 30, 10, 0, 0, 10, 30, 20,
+                ];
+                let mut newtable = vec![];
+                for i in 0..pawntable.iter().count() {
+                    newtable.push(pawntable[63 - i as usize])
+                }
+                println!("{:?}", newtable);*/
             }
             _ => (),
         }
