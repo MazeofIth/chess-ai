@@ -1,1 +1,1 @@
-// A chess engine, GUI, and engine written in Rust. You can download the program here: 
+// A chess engine, GUI, and AI written in Rust.

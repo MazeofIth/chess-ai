@@ -22,6 +22,10 @@ mod ai;
 mod lib;
 use std::thread::sleep;
 use std::time::{Duration, Instant};
+use include_dir::{include_dir, Dir};
+use std::path::Path;
+
+const PROJECT_DIR: Dir = include_dir!("resources");
 
 struct MainState {
     image1: graphics::Image,
@@ -111,6 +115,9 @@ const WHITE: Color = Color::new(150.0 / 255.0, 75.0 / 255.0, 0.0 / 255.0, 1.0);
 // 139,69,19)
 const BROWN: Color = Color::new(101.0 / 255.0, 67.0 / 255.0, 0.0 / 33.0, 1.0);
 const RED: Color = Color::new(200.0 / 255.0, 157.0 / 255.0, 0.0 / 124.0, 1.0);
+
+//const bishop1 : include_dir::File = PROJECT_DIR.get_file("black_bishop.png"); //.unwrap();
+//const bishop : include_dir::File = PROJECT_DIR.to_file("black_bishop.png").unwrap(); //.unwrap();
 
 impl MainState {
     /// Load images and create meshes.
@@ -549,6 +556,7 @@ pub fn main() -> GameResult {
     } else {
         path::PathBuf::from("./resources")
     };
+    let bishop = PROJECT_DIR.get_file("black_bishop.png").unwrap();
 
     let cb = ggez::ContextBuilder::new("drawing", "ggez")
         .add_resource_path(resource_dir)

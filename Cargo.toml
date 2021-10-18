@@ -11,3 +11,4 @@ glam = { version = "0.17.0", default-features = false, features = ["libm"] }
 eliasfl-chess = { git = "https://github.com/INDAPlus21/eliasfl-chess" }
 rand = "0.8.4"
 stopwatch = "0.0.7"
+include_dir = "0.6.2"
